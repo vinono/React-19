@@ -126,6 +126,101 @@ function ThemedComponent({ show }) {
   }
   return null;
 }`}
+          fullCode={`import { use, Suspense, useState, createContext } from "react";
+
+// 1. Promise Demo
+const fetchMessage = () =>
+  new Promise((resolve) => {
+    setTimeout(() => resolve("Hello from the Promise!"), 2000);
+  });
+
+function Message({ messagePromise }) {
+  const message = use(messagePromise);
+  return <p className="text-xl font-medium text-blue-600">{message}</p>;
+}
+
+// 2. Context Demo
+const ThemeContext = createContext("light");
+
+function ThemedMessage({ show, label }) {
+  if (!show) return null;
+  // 'use' can be called conditionally!
+  const theme = use(ThemeContext);
+  return (
+    <p className="text-sm text-gray-600">
+      {label} {theme}
+    </p>
+  );
+}
+
+export default function App() {
+  const [promise, setPromise] = useState(null);
+  const [showContext, setShowContext] = useState(false);
+
+  const startFetch = () => {
+    setPromise(fetchMessage());
+  };
+
+  return (
+    <ThemeContext.Provider value="dark">
+      <div className="p-8 max-w-4xl mx-auto">
+        <div className="space-y-6">
+          <div className="space-y-2">
+            <h3 className="text-2xl font-semibold">use() Hook Demo</h3>
+            <p className="text-muted-foreground">
+              Unwrap promises and context values directly in render
+            </p>
+          </div>
+        
+        {/* Promise Section */}
+        <div className="p-6 rounded-xl border bg-card space-y-4">
+          <h2 className="text-xl font-semibold">1. Promise Example</h2>
+          <button
+            onClick={startFetch}
+            className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+          >
+            Fetch Message
+          </button>
+
+          <div className="min-h-[60px] flex items-center">
+            {promise ? (
+              <Suspense
+                fallback={
+                  <div className="text-muted-foreground">Loading message...</div>
+                }
+              >
+                <Message messagePromise={promise} />
+              </Suspense>
+            ) : (
+              <span className="text-muted-foreground text-sm">
+                Click button to start
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Context Section */}
+        <div className="p-6 rounded-lg border border-gray-200 space-y-4">
+          <h2 className="text-xl font-semibold">2. Context Example</h2>
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="show-context"
+              checked={showContext}
+              onChange={(e) => setShowContext(e.target.checked)}
+              className="w-4 h-4"
+            />
+            <label htmlFor="show-context" className="text-sm">
+              Show themed message
+            </label>
+          </div>
+          <ThemedMessage show={showContext} label="Current theme:" />
+        </div>
+        </div>
+      </div>
+    </ThemeContext.Provider>
+  );
+}`}
         />
       </div>
     </div>

@@ -93,6 +93,63 @@ export default function Button() {
     </button>
   );
 }`}
+          fullCode={`// This demo shows the concept of Server Components
+// Note: Full server components require a framework like Next.js
+
+// Simulated server action
+async function saveData(formData) {
+  'use server'; // In real RSC, this would run on server
+  
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  const data = Object.fromEntries(formData);
+  console.log('Saved on server:', data);
+  return { success: true, data };
+}
+
+// Client component
+export default function App() {
+  'use client'; // This runs on client
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const result = await saveData(formData);
+    alert(\`Saved: \${JSON.stringify(result.data)}\`);
+  };
+
+  return (
+    <div className="p-8 font-sans max-w-md">
+      <h1 className="text-3xl font-bold mb-6">Server Components Concept</h1>
+      
+      <div className="p-6 rounded-lg border border-gray-200 space-y-4">
+        <div className="space-y-4 mb-6">
+          <div className="flex items-center gap-2 p-3 bg-blue-50 rounded">
+            <code className="text-sm font-mono text-blue-700">'use server'</code>
+            <span className="text-sm text-gray-600">Runs on server</span>
+          </div>
+          <div className="flex items-center gap-2 p-3 bg-green-50 rounded">
+            <code className="text-sm font-mono text-green-700">'use client'</code>
+            <span className="text-sm text-gray-600">Runs on client</span>
+          </div>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <input
+            name="name"
+            placeholder="Enter name"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md"
+          />
+          <button
+            type="submit"
+            className="w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+          >
+            Save to Server
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}`}
         />
       </div>
     </div>

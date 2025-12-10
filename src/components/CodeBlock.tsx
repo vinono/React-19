@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Editor from "react-simple-code-editor";
 import Prism from "prismjs";
 import "prismjs/themes/prism-tomorrow.css";
@@ -12,6 +13,7 @@ import LZString from "lz-string";
 
 interface CodeBlockProps {
   code: string;
+  fullCode?: string; // Complete executable code for sandbox
   language?: string;
   className?: string;
   onChange?: (code: string) => void;
@@ -19,11 +21,13 @@ interface CodeBlockProps {
 
 export default function CodeBlock({
   code,
+  fullCode,
   language = "tsx",
   className,
   onChange,
 }: CodeBlockProps) {
   const [value, setValue] = useState(code);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setValue(code);
@@ -63,8 +67,10 @@ export default function CodeBlock({
         </span>
         <button
           onClick={() => {
-            const encoded = LZString.compressToEncodedURIComponent(value);
-            window.open(`/sandbox?code=${encoded}`, "_blank");
+            // Use fullCode if provided, otherwise use current editor value
+            const codeToSend = fullCode || value;
+            const encoded = LZString.compressToEncodedURIComponent(codeToSend);
+            navigate(`/sandbox?code=${encoded}`);
           }}
           className="p-1.5 hover:bg-white/10 rounded-md transition-colors text-white/70 hover:text-white flex items-center gap-1"
           title="Open in Sandbox"

@@ -71,6 +71,59 @@ function App() {
     </ThemeContext>
   );
 }`}
+          fullCode={`import { createContext, useState, use } from "react";
+
+// Create a context
+const ThemeContext = createContext(null);
+
+function ThemedButton() {
+  // Consume context using 'use' hook
+  const context = use(ThemeContext);
+
+  if (!context) return null;
+
+  return (
+    <button
+      onClick={context.toggle}
+      className={\`px-4 py-2 rounded-md transition-colors \${
+        context.theme === "dark"
+          ? "bg-slate-800 text-white hover:bg-slate-700"
+          : "bg-amber-100 text-amber-900 hover:bg-amber-200"
+      }\`}
+    >
+      Toggle to {context.theme === "dark" ? "light" : "dark"} mode
+    </button>
+  );
+}
+
+export default function App() {
+  const [theme, setTheme] = useState("light");
+
+  const toggle = () => setTheme((t) => (t === "light" ? "dark" : "light"));
+
+  return (
+    <div className="p-8 font-sans max-w-md">
+      <h1 className="text-3xl font-bold mb-6">Context as Provider Demo</h1>
+
+      <div className="p-6 rounded-lg border border-gray-200 space-y-6">
+        <p className="text-sm text-gray-600">
+          React 19: Use context directly as provider, no .Provider needed!
+        </p>
+        
+        <div className="flex items-center justify-center p-8 rounded-lg bg-gray-50">
+          {/* New Syntax: Context as Provider */}
+          <ThemeContext value={{ theme, toggle }}>
+            <ThemedButton />
+          </ThemeContext>
+        </div>
+
+        <div className="text-sm font-mono bg-gray-100 px-3 py-2 rounded">
+          Current theme: <span className="font-bold">{theme}</span>
+        </div>
+      </div>
+    </div>
+  );
+}`}
         />
       </div>
     </div>

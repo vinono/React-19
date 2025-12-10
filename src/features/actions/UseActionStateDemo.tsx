@@ -108,6 +108,79 @@ return (
     {error && <p>{error}</p>}
   </form>
 );`}
+          fullCode={`import { useActionState } from "react";
+
+// Simulated server action
+async function updateName(prevState, formData) {
+  const name = formData.get("name");
+
+  // Simulate network delay
+  await new Promise((resolve) => setTimeout(resolve, 1500));
+
+  if (!name) {
+    return "Name is required";
+  }
+
+  if (name.toLowerCase() === "error") {
+    return "Simulated error occurred";
+  }
+
+  return null; // No error
+}
+
+export default function App() {
+  const [error, submitAction, isPending] = useActionState(updateName, null);
+
+  return (
+    <div className="p-8 max-w-md mx-auto">
+      <div className="space-y-6">
+        <div className="space-y-2">
+          <h3 className="text-2xl font-semibold">useActionState Demo</h3>
+          <p className="text-muted-foreground">
+            Manage form state and pending states with the new useActionState hook
+          </p>
+        </div>
+
+        <div className="p-6 rounded-xl border bg-card">
+          <form action={submitAction} className="space-y-4">
+            <div className="space-y-2">
+              <label htmlFor="name" className="text-sm font-medium">
+                Your Name
+              </label>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                placeholder="Enter your name (try 'error')"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={isPending}
+              className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full"
+            >
+              {isPending ? "Updating..." : "Update Name"}
+            </button>
+
+            {error && (
+              <div className="text-sm text-destructive font-medium">
+                {error}
+              </div>
+            )}
+
+            {!error && !isPending && (
+              <div className="text-sm text-muted-foreground">
+                Try submitting with empty input or type "error"
+              </div>
+            )}
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+}`}
         />
       </div>
     </div>

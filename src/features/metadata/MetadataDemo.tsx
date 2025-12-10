@@ -75,6 +75,61 @@ export default function MetadataDemo() {
     </article>
   );
 }`}
+          fullCode={`import { useState } from "react";
+
+export default function App() {
+  const [title, setTitle] = useState("React 19 Showcase");
+  const [description, setDescription] = useState(
+    "Exploring the new features of React 19"
+  );
+
+  return (
+    <div className="p-8 font-sans max-w-2xl">
+      <h1 className="text-3xl font-bold mb-6">Metadata Tags Demo</h1>
+
+      <div className="p-6 rounded-lg border border-gray-200 space-y-6">
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <label className="text-sm font-medium block">Page Title</label>
+            <input
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium block">
+              Meta Description
+            </label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="w-full min-h-[80px] px-3 py-2 border border-gray-300 rounded-md"
+            />
+          </div>
+        </div>
+
+        <div className="p-4 rounded-lg bg-gray-50 text-sm">
+          <p className="text-gray-600 mb-2">
+            React 19 can render these tags in the document head:
+          </p>
+          <div className="font-mono text-xs text-gray-500">
+            &lt;!-- Injected by React --&gt;
+            <br />
+            &lt;title&gt;{title}&lt;/title&gt;
+            <br />
+            &lt;meta name="description" content="{description}" /&gt;
+          </div>
+        </div>
+
+        {/* The actual metadata tags being rendered */}
+        <title>{title}</title>
+        <meta name="description" content={description} />
+      </div>
+    </div>
+  );
+}`}
         />
       </div>
     </div>

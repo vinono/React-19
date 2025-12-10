@@ -106,6 +106,76 @@ function App() {
     </form>
   );
 }`}
+          fullCode={`import { useFormStatus } from "react-dom";
+
+// A component that reads status from the parent form
+function SubmitButton() {
+  const { pending, data } = useFormStatus();
+
+  return (
+    <div className="space-y-4">
+      <button
+        type="submit"
+        disabled={pending}
+        className="w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        {pending ? "Submitting..." : "Subscribe"}
+      </button>
+
+      {pending && (
+        <div className="text-xs text-muted-foreground animate-pulse">
+          Submitting form...
+        </div>
+      )}
+
+      {data && (
+        <div className="text-xs text-green-600">
+          Submitted: {data.get("email")}
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default function App() {
+  const action = async (formData) => {
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    console.log("Subscribed:", formData.get("email"));
+  };
+
+  return (
+    <div className="p-8 max-w-md mx-auto">
+      <div className="space-y-6">
+        <div className="space-y-2">
+          <h3 className="text-2xl font-semibold">useFormStatus Demo</h3>
+          <p className="text-muted-foreground">
+            Access form submission status from child components
+          </p>
+        </div>
+
+      <div className="p-6 rounded-xl border bg-card">
+        <form action={action} className="space-y-4">
+          <div className="space-y-2">
+            <label htmlFor="email" className="text-sm font-medium block">
+              Email Address
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              required
+              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              placeholder="you@example.com"
+            />
+          </div>
+
+          {/* SubmitButton uses useFormStatus internally */}
+          <SubmitButton />
+        </form>
+      </div>
+    </div>
+  );
+}`}
         />
       </div>
     </div>
